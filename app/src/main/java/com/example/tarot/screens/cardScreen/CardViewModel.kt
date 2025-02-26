@@ -1,4 +1,4 @@
-package com.example.tarot.screens
+package com.example.tarot.screens.cardScreen
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TarotRepository): ViewModel() {
+class CardViewModel @Inject constructor(private val repository: TarotRepository): ViewModel() {
     val data: MutableState<DataOrException<ArrayList<TCardsItem>, Boolean, Exception>> = mutableStateOf(
         DataOrException(null, true, Exception(""))
     )

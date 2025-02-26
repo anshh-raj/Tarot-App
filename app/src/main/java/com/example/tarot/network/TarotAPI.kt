@@ -6,6 +6,6 @@ import javax.inject.Singleton
 
 @Singleton
 interface TarotAPI {
-    @GET("cards")
+    @GET("/cards")
     suspend fun getAllCards(): TCards
 }
