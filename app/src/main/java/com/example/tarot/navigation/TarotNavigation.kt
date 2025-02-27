@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tarot.screens.cardScreen.CardScreen
 import com.example.tarot.screens.cardScreen.CardViewModel
 import com.example.tarot.screens.homeScreen.HomeScreen
+import com.example.tarot.screens.revealScreen.RevealScreen
 
 @Composable
 fun TarotNavigation(){
@@ -19,6 +20,9 @@ fun TarotNavigation(){
         composable(TarotScreens.CardScreen.name){
             val cardViewModel = hiltViewModel<CardViewModel>()
             CardScreen(navController, cardViewModel)
+        }
+        composable(TarotScreens.RevealScreen.name){
+            RevealScreen(navController)
         }
     }
 }
