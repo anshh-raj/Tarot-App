@@ -1,5 +1,6 @@
 package com.example.tarot.screens.homeScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,6 +32,8 @@ import com.example.tarot.navigation.TarotScreens
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
+    val context = LocalContext.current
+
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -70,8 +74,11 @@ fun HomeScreen(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    navController.navigate(TarotScreens.CardScreen.name)
-                    // save to Room DB
+                    if(valid){
+                        navController.navigate(TarotScreens.CardScreen.name + "/${text.value}")
+                    }else{
+                        Toast.makeText(context, "Please ask a question to proceed", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 shape = CircleShape,
             ) {

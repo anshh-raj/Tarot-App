@@ -32,14 +32,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.tarot.model.TCardsItem
+import com.example.tarot.model.TarotCards
 import com.example.tarot.navigation.TarotScreens
 import com.example.tarot.utils.Constants
 
 @Composable
-fun CardScreen(navController: NavHostController, cardViewModel: CardViewModel = hiltViewModel()) {
+fun CardScreen(
+    navController: NavHostController,
+    cardViewModel: CardViewModel = hiltViewModel(),
+    title: String?
+) {
     val count = rememberSaveable {
         mutableIntStateOf(0)
     }
+    val listCards = mutableListOf<TCardsItem>()
+    Log.d("titles", "CardScreen: $title")
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -71,10 +78,26 @@ fun CardScreen(navController: NavHostController, cardViewModel: CardViewModel = 
                             Box(
                                 modifier = Modifier.weight(1f)
                             ){
-                                CardRow(card){
-                                    count.value +=it
-                                    Log.d("count", "CardRow: ${count.intValue}")
+                                CardRow(card){ i: Int, tCardsItem: TCardsItem ->
+                                    count.value +=i
+                                    if(i>0) listCards.add(tCardsItem)
+                                    if(i<0) listCards.remove(tCardsItem)
+//                                    Log.d("count", "CardRow: ${listCards}")
                                     if(count.intValue == 3){
+                                        cardViewModel.addCard(
+                                            TarotCards(
+                                                title = title.toString(),
+                                                description1 = listCards[0].description,
+                                                image1 = listCards[0].image,
+                                                name1 = listCards[0].name,
+                                                description2 = listCards[1].description,
+                                                image2 = listCards[1].image,
+                                                name2 = listCards[1].name,
+                                                description3 = listCards[2].description,
+                                                image3 = listCards[2].image,
+                                                name3 = listCards[2].name
+                                            )
+                                        )
                                         navController.navigate(TarotScreens.RevealScreen.name)
                                     }
                                 }
@@ -88,7 +111,7 @@ fun CardScreen(navController: NavHostController, cardViewModel: CardViewModel = 
 }
 
 @Composable
-fun CardRow(card: TCardsItem, onCLickEvent: (Int) -> Unit) {
+fun CardRow(card: TCardsItem, onCLickEvent: (Int,TCardsItem) -> Unit) {
     val selected = rememberSaveable {
         mutableStateOf(false)
     }
@@ -97,11 +120,9 @@ fun CardRow(card: TCardsItem, onCLickEvent: (Int) -> Unit) {
         onClick = {
             selected.value = !selected.value
             if(selected.value){
-                onCLickEvent(1)
-                // add to database
+                onCLickEvent(1,card)
             } else {
-                onCLickEvent(-1)
-                // delete from database
+                onCLickEvent(-1,card)
             }
 
         },
