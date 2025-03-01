@@ -7,9 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.tarot.screens.aboutScreen.AboutScreen
 import com.example.tarot.screens.cardScreen.CardScreen
 import com.example.tarot.screens.cardScreen.CardViewModel
 import com.example.tarot.screens.homeScreen.HomeScreen
+import com.example.tarot.screens.pastReadingScreen.PastReadingScreen
 import com.example.tarot.screens.revealScreen.RevealScreen
 
 @Composable
@@ -28,6 +30,13 @@ fun TarotNavigation(){
         composable(TarotScreens.RevealScreen.name){
             val cardViewModel = hiltViewModel<CardViewModel>()
             RevealScreen(navController, cardViewModel)
+        }
+        composable(TarotScreens.PastReadingScreen.name){
+            val cardViewModel = hiltViewModel<CardViewModel>()
+            PastReadingScreen(cardViewModel)
+        }
+        composable(TarotScreens.AboutScreen.name){
+            AboutScreen()
         }
     }
 }

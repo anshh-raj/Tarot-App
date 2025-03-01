@@ -12,13 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,69 +41,98 @@ import com.example.tarot.model.TarotCards
 import com.example.tarot.navigation.TarotScreens
 import com.example.tarot.utils.Constants
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardScreen(
     navController: NavHostController,
     cardViewModel: CardViewModel = hiltViewModel(),
     title: String?
 ) {
-    val count = rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    val listCards = mutableListOf<TCardsItem>()
-    Log.d("titles", "CardScreen: $title")
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        val listOfCards = cardViewModel.data.value.data
-        val readOnlyList: List<TCardsItem> = listOfCards?.toList()?.shuffled() ?: emptyList()
-        Log.d("dataa", "CardScreen: ${readOnlyList.toString()}")
-        if(cardViewModel.data.value.loading == true){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator()
-            }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        "TarotVerse",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Cyan
+                )
+            )
         }
-        else{
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .statusBarsPadding(),
-                contentPadding = PaddingValues(8.dp)
-            ) {
-                items(readOnlyList.chunked(3)){ cardPair->
-                    Row(
+    ){innerPadding ->
+        val count = rememberSaveable {
+            mutableIntStateOf(0)
+        }
+        val listCards = mutableListOf<TCardsItem>()
+        Log.d("titles", "CardScreen: $title")
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            val listOfCards = cardViewModel.data.value.data
+            val readOnlyList: List<TCardsItem> = listOfCards?.toList()?.shuffled() ?: emptyList()
+            Log.d("dataa", "CardScreen: $readOnlyList")
+            if(cardViewModel.data.value.loading == true){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            else{
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "Please select any 3 cards",
+                        modifier = Modifier.padding(8.dp),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                    LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxSize(),
+                        contentPadding = PaddingValues(8.dp)
                     ) {
-                        cardPair.forEach { card->
-                            Box(
-                                modifier = Modifier.weight(1f)
-                            ){
-                                CardRow(card){ i: Int, tCardsItem: TCardsItem ->
-                                    count.value +=i
-                                    if(i>0) listCards.add(tCardsItem)
-                                    if(i<0) listCards.remove(tCardsItem)
+                        items(readOnlyList.chunked(3)){ cardPair->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                            ) {
+                                cardPair.forEach { card->
+                                    Box(
+                                        modifier = Modifier.weight(1f)
+                                    ){
+                                        CardRow(card){ i: Int, tCardsItem: TCardsItem ->
+                                            count.value +=i
+                                            if(i>0) listCards.add(tCardsItem)
+                                            if(i<0) listCards.remove(tCardsItem)
 //                                    Log.d("count", "CardRow: ${listCards}")
-                                    if(count.intValue == 3){
-                                        cardViewModel.addCard(
-                                            TarotCards(
-                                                title = title.toString(),
-                                                description1 = listCards[0].description,
-                                                image1 = listCards[0].image,
-                                                name1 = listCards[0].name,
-                                                description2 = listCards[1].description,
-                                                image2 = listCards[1].image,
-                                                name2 = listCards[1].name,
-                                                description3 = listCards[2].description,
-                                                image3 = listCards[2].image,
-                                                name3 = listCards[2].name
-                                            )
-                                        )
-                                        navController.navigate(TarotScreens.RevealScreen.name)
+                                            if(count.intValue == 3){
+                                                cardViewModel.addCard(
+                                                    TarotCards(
+                                                        title = title.toString(),
+                                                        description1 = listCards[0].description,
+                                                        image1 = listCards[0].image,
+                                                        name1 = listCards[0].name,
+                                                        description2 = listCards[1].description,
+                                                        image2 = listCards[1].image,
+                                                        name2 = listCards[1].name,
+                                                        description3 = listCards[2].description,
+                                                        image3 = listCards[2].image,
+                                                        name3 = listCards[2].name
+                                                    )
+                                                )
+                                                navController.navigate(TarotScreens.RevealScreen.name)
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -107,6 +141,7 @@ fun CardScreen(
                 }
             }
         }
+
     }
 }
 

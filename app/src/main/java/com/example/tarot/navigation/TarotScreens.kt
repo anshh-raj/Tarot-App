@@ -4,4 +4,6 @@ enum class TarotScreens {
     HomeScreen,
     CardScreen,
     RevealScreen,
+    PastReadingScreen,
+    AboutScreen
 }
