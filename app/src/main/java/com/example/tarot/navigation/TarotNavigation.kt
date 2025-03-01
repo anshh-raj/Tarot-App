@@ -33,10 +33,10 @@ fun TarotNavigation(){
         }
         composable(TarotScreens.PastReadingScreen.name){
             val cardViewModel = hiltViewModel<CardViewModel>()
-            PastReadingScreen(cardViewModel)
+            PastReadingScreen(cardViewModel,navController)
         }
         composable(TarotScreens.AboutScreen.name){
-            AboutScreen()
+            AboutScreen(navController)
         }
     }
 }

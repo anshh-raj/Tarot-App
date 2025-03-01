@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,11 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.tarot.screens.cardScreen.CardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PastReadingScreen(cardViewModel: CardViewModel = hiltViewModel()){
+fun PastReadingScreen(
+    cardViewModel: CardViewModel = hiltViewModel(),
+    navController: NavHostController
+){
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -39,6 +44,18 @@ fun PastReadingScreen(cardViewModel: CardViewModel = hiltViewModel()){
                         "TarotVerse",
                         style = MaterialTheme.typography.titleLarge
                     )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back Icon"
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color.Cyan
